@@ -7,6 +7,12 @@ GUARD_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$GUARD_SCRIPT_DIR/.." && pwd)"
 MIGRATIONS_DIR="${MIGRATIONS_DIR:-$REPO_ROOT/supabase/migrations}"
 
+# Keep CLI login state and telemetry inside the repo (gitignored, owner-only) so an agent
+# sandboxed to the repo never needs access to the user's home directory.
+umask 077
+export SUPABASE_HOME="${SUPABASE_HOME:-$REPO_ROOT/supabase/.temp/cli-home}"
+export SUPABASE_TELEMETRY_DISABLED=1
+
 # Prefer local install, then PATH.
 resolve_supabase_cli() {
   if [[ -x "$REPO_ROOT/node_modules/.bin/supabase" ]]; then

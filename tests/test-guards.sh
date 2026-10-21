@@ -48,4 +48,10 @@ if "$ROOT/scripts/check-migrations.sh" --strict >/dev/null 2>&1; then
   fail "legacy three-digit name should fail"
 fi
 
+# --- read-only query guard refuses anything that writes ---
+echo "insert into public.demo values (1);" > "$tmpdir/write.sql"
+if "$ROOT/scripts/query.sh" "$tmpdir/write.sql" >/dev/null 2>&1; then
+  fail "query.sh ran a file containing INSERT"
+fi
+
 echo "All guard tests passed."

@@ -34,9 +34,23 @@ then re-approve next time.
 ```bash
 npm install
 npm test                 # offline unit tests
+npm run db:setup         # you, once: supabase login + link (agents never run this)
 npm run db:migrations:check
-npm run db:plan          # needs linked project
+npm run db:status        # linked migration history, read-only
+npm run db:plan          # dry run + approval code
 ```
+
+## Commands
+
+| Command | Who | What it does |
+| --- | --- | --- |
+| `db:setup` | human, once | Log in and link the hosted project. Login state lives in `supabase/.temp/` (gitignored, owner-only), not in `~`, so a sandboxed agent never needs your home directory |
+| `db:migrations:check [-- --strict]` | agent | Filename and duplicate-version checks, offline |
+| `db:status` | agent | Checks plus `migration list --linked` |
+| `db:plan` | agent | Hosted dry run, risk scan, approval code |
+| `db:apply -- <code> [--allow-destructive]` | agent, after approval | Push only if the code still matches |
+| `db:query -- <file.sql> [--json]` | agent | Run a SQL file against the linked project, refused if it contains any writing keyword. For verifying what an approved apply did |
+| `db:replay` | agent | Replay every migration into a fresh `supabase/postgres` Docker container and leave it up. Proves the chain builds from scratch, which a hosted dry run cannot |
 
 ## What gets hashed into the approval code
 

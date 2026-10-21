@@ -1,17 +1,21 @@
 {
   "name": "agent-db-guard",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Approval-gated Supabase migrations for coding agents",
   "license": "MIT",
   "scripts": {
+    "db:setup": "bash scripts/setup.sh",
     "db:migrations:check": "bash scripts/check-migrations.sh",
+    "db:status": "bash scripts/status.sh",
     "db:plan": "bash scripts/plan.sh",
     "db:apply": "bash scripts/apply.sh",
+    "db:query": "bash scripts/query.sh",
+    "db:replay": "bash scripts/replay-fresh.sh",
     "test": "bash tests/test-guards.sh"
   },
   "devDependencies": {
-    "supabase": "^2.26.0"
+    "supabase": "2.109.1"
   },
   "engines": {
     "node": ">=18"
